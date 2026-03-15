@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>HelloWine – Nasze filmy</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    h1 { color: #800000; }
+    table { border-collapse: collapse; width: 100%; background: #fff; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #eee; }
+    a { color: #800000; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>HelloWine – Nasze filmy</h1>
+  <p>Dodaj film tutaj: <a href="https://docs.google.com/forms/d/1s-U19X5gWqd3U0o3iTgEJ52_FvvyOHvv8dAwh7GTNZw/edit" target="_blank">formularz</a></p>
+
+  <table id="filmTable">
+    <tr>
+      <th>Film</th>
+      <th>Data obejrzenia</th>
+      <th>Ocena /10</th>
+      <th>Komentarz</th>
+    </tr>
+  </table>
+
+  <script>
+    const sheetID = "1ViU92P8B61yGspuWc3HT-ltD3ttE8R1OQIWZddiueA8"; // ID arkusza Google Sheets
+    const sheetName = "Arkusz1"; // nazwa arkusza, zwykle "Arkusz1"
+
+    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}`;
+
+    fetch(url)
+      .then(res => res.text())
+      .then(data => {
+        const json = JSON.parse(data.substring(47).slice(0, -2));
+        const table = document.getElementById("filmTable");
+        json.table.rows.forEach(row => {
+          const tr = document.createElement("tr");
+          row.c.forEach(cell => {
+            const td = document.createElement("td");
+            td.textContent = cell ? cell.v : "";
+            tr.appendChild(td);
+          });
+          table.appendChild(tr);
+        });
+      })
+      .catch(err => console.error("Błąd pobierania danych: ", err));
+  </script>
+</body>
+</html>
